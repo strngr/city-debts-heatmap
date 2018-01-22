@@ -1,0 +1,71 @@
+<html>
+<head>
+  <title></title>
+  <style>
+    #map {
+      height: 100%;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-112884052-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-112884052-1');
+  </script>
+
+  <script>
+var map, heatmap;
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 14,
+    center: { lat: 46.301324, lng: 30.654985 },
+    mapTypeId: 'satellite'
+  });
+
+  fetch('data.json')
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      return data.reduce(function (points, address) {
+        points.push({ location: new google.maps.LatLng(address.pos[0], address.pos[1]), weight: address.debt });
+        return points;
+      }, []);
+    })
+    .then(function(points) {
+      heatmap = new google.maps.visualization.HeatmapLayer({
+        data: points,
+        map: map,
+        radius: 50,
+        gradient: [
+          "rgba(102, 255, 0, 0)",
+          "rgba(102, 255, 0, 1)",
+          "rgba(147, 255, 0, 1)",
+          "rgba(193, 255, 0, 1)",
+          "rgba(238, 255, 0, 1)",
+          "rgba(244, 227, 0, 1)",
+          "rgba(249, 198, 0, 1)",
+          "rgba(255, 170, 0, 1)",
+          "rgba(255, 113, 0, 1)",
+          "rgba(255, 57, 0, 1)",
+          "rgba(255, 0, 0, 1)"
+        ]
+      });
+    })
+    .catch( alert );
+}
+  </script>
+</head
+<body>
+  <div id="map"></div>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFqqJrEuDK5UeyXjtXVXl_1mE-bOxNPqs&libraries=visualization&callback=initMap"></script>
+</body>
+</html>
